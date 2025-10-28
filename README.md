@@ -21,10 +21,8 @@ A simple language for calculation. (WIP)
 ## Build
 
 ```bash
-mkdir build
-cd build
-cmake ..
-make
+cmake -B build
+cmake --build build
 ```
 
 ## License
