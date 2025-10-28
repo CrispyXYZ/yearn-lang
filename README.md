@@ -12,7 +12,14 @@ A simple language for calculation. (WIP)
 
 - (WIP)
 
+## Prerequisites
+
+- C++ compiler (C++17 or higher)
+- CMake (3.20 or higher)
+- Make or Ninja
+
 ## Build
+
 ```bash
 mkdir build
 cd build

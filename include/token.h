@@ -8,6 +8,7 @@
 enum class TokenType : unsigned char {
     Null,
     Plus,
+    Minus,
     Integer,
     Eof
 };

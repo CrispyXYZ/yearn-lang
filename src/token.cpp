@@ -4,6 +4,7 @@
 
 const std::unordered_map<TokenType, std::string> Token::typeNames = {
     {TokenType::Plus, "Plus"},
+    {TokenType::Minus, "Minus"},
     {TokenType::Integer, "Integer"},
     {TokenType::Eof, "Eof"}
 };

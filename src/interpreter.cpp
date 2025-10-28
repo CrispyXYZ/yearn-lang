@@ -22,6 +22,10 @@ Token Interpreter::getNextToken() {
         ++pos;
         return {TokenType::Plus, nullptr};
     }
+    if (currentChar == '-') {
+        ++pos;
+        return {TokenType::Minus, nullptr};
+    }
     throwError();
 }
 
@@ -39,11 +43,23 @@ void Interpreter::process() {
     expect(TokenType::Integer);
 
     auto op = currentToken;
-    expect(TokenType::Plus);
+    if (op.getType() == TokenType::Plus) {
+        expect(TokenType::Plus);
+    } else if (op.getType() == TokenType::Minus) {
+        expect(TokenType::Minus);
+    }
 
     auto right = currentToken;
     expect(TokenType::Integer);
 
-    auto result = left.getValue<int>() + right.getValue<int>();
+    int result;
+    if (op.getType() == TokenType::Plus) {
+        result = left.getValue<int>() + right.getValue<int>();
+    } else if (op.getType() == TokenType::Minus) {
+        result = left.getValue<int>() - right.getValue<int>();
+    } else {
+        throwError();
+    }
+
     std::cout << result << std::endl;
 }
