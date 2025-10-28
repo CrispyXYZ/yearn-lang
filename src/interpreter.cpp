@@ -13,23 +13,34 @@ Token Interpreter::getNextToken() {
     if (pos >= expression.size()) {
         return Token{TokenType::Eof, ""};
     }
+
     char currentChar = expression[pos];
+
+    while (isspace(currentChar)) {
+        pos++;
+        currentChar = expression[pos];
+    }
+
     if (isdigit(currentChar)) {
-        ++pos;
-        return {TokenType::Integer, currentChar - '0'};
+        int sum=0;
+        while (isdigit(currentChar)) {
+            sum = sum * 10 + currentChar - '0';
+            currentChar = expression[++pos];
+        }
+        return {TokenType::Integer, sum};
     }
     if (currentChar == '+') {
-        ++pos;
+        pos++;
         return {TokenType::Plus, nullptr};
     }
     if (currentChar == '-') {
-        ++pos;
+        pos++;
         return {TokenType::Minus, nullptr};
     }
     throwError();
 }
 
-void Interpreter::expect(const TokenType &type) {
+void Interpreter::consume(const TokenType &type) {
     if (currentToken.getType() == type) {
         currentToken = getNextToken();
     } else {
@@ -40,17 +51,17 @@ void Interpreter::expect(const TokenType &type) {
 void Interpreter::process() {
     currentToken = getNextToken();
     auto left = currentToken;
-    expect(TokenType::Integer);
+    consume(TokenType::Integer);
 
     auto op = currentToken;
     if (op.getType() == TokenType::Plus) {
-        expect(TokenType::Plus);
+        consume(TokenType::Plus);
     } else if (op.getType() == TokenType::Minus) {
-        expect(TokenType::Minus);
+        consume(TokenType::Minus);
     }
 
     auto right = currentToken;
-    expect(TokenType::Integer);
+    consume(TokenType::Integer);
 
     int result;
     if (op.getType() == TokenType::Plus) {

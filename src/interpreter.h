@@ -14,7 +14,7 @@ public:
     Interpreter() = delete;
     [[noreturn]] void throwError() const;
     Token getNextToken();
-    void expect(const TokenType &type);
+    void consume(const TokenType &type);
     void process();
 
 };

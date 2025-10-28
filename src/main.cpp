@@ -7,7 +7,7 @@ int main() {
     for (;;) {
         std::string str;
         std::cout << ">>> ";
-        std::cin >> str;
+        getline(std::cin, str);
         if (str.empty()) break;
         Interpreter interpreter{str};
         interpreter.process();
