@@ -4,10 +4,31 @@ IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 
+BreakBeforeBraces: Attach
+
 PointerAlignment: Right
 DerivePointerAlignment: false
+
+ColumnLimit: 100
+
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortBlocksOnASingleLine: Empty
 
 AccessModifierOffset: -4
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
 NamespaceIndentation: All
+
+BreakBeforeBinaryOperators: None
+BreakConstructorInitializers: AfterColon
+BreakStringLiterals: true
+
+SortIncludes: CaseSensitive
+
+SpaceBeforeParens: Never
+SpaceInEmptyParentheses: false
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+SpacesInContainerLiterals: false

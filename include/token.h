@@ -5,24 +5,19 @@
 #include <unordered_map>
 #include <variant>
 
-enum class TokenType : unsigned char {
-    Null,
-    Plus,
-    Minus,
-    Integer,
-    Eof
-};
+enum class TokenType : unsigned char { Null, Plus, Minus, Integer, Eof };
 
 class Token {
 public:
     using ValueType = std::variant<int, char, std::string, double, bool, void *>;
 
 private:
-    static const std::unordered_map<TokenType, std::string> typeNames;
     TokenType type = TokenType::Null;
     ValueType value = nullptr;
 
 public:
+    static const std::unordered_map<TokenType, std::string> typeNames;
+
     template <typename T>
     Token(const TokenType type, T &&value) noexcept : type(type), value(std::forward<T>(value)) {}
 

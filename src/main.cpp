@@ -4,13 +4,17 @@
 
 #include "interpreter.h"
 int main() {
-    for (;;) {
+    for(;;) {
         std::string str;
         std::cout << ">>> ";
         getline(std::cin, str);
-        if (str.empty()) break;
+        if(str.empty()) break;
         Interpreter interpreter{str};
-        interpreter.process();
+        try {
+            interpreter.process();
+        } catch(const std::runtime_error& e) {
+            std::cout << "Error:" << e.what() << std::endl;
+        }
     }
     return 0;
 }

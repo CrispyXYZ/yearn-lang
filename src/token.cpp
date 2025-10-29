@@ -6,17 +6,14 @@ const std::unordered_map<TokenType, std::string> Token::typeNames = {
     {TokenType::Plus, "Plus"},
     {TokenType::Minus, "Minus"},
     {TokenType::Integer, "Integer"},
-    {TokenType::Eof, "Eof"}
-};
+    {TokenType::Eof, "Eof"}};
 
 const TokenType &Token::getType() const noexcept {
     return type;
 }
 
-std::ostream &operator<<(std::ostream &strm, const Token& tok) {
+std::ostream &operator<<(std::ostream &strm, const Token &tok) {
     strm << "Token{type=" << Token::typeNames.at(tok.type) << ", value=";
-    std::visit([&strm](const auto &v) {
-        strm << v << "}";
-    },tok.value);
+    std::visit([&strm](const auto &v) { strm << v << "}"; }, tok.value);
     return strm;
 }

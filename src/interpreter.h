@@ -8,15 +8,19 @@ class Interpreter {
     std::string expression;
     int pos = 0;
     Token currentToken{};
+    char currentChar;
 
-public:
-    explicit Interpreter(std::string expression) noexcept;
-    Interpreter() = delete;
-    [[noreturn]] void throwError() const;
+    [[noreturn]] void throwError(const std::string &msg) const;
     Token getNextToken();
     void consume(const TokenType &type);
-    void process();
+    void advance();
+    void skipWhitespace();
+    int parseInt();
 
+public:
+    explicit Interpreter(std::string expression);
+    Interpreter() = delete;
+    void process();
 };
 
 #endif  // YEARN_INTERPRETER_H

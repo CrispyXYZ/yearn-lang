@@ -3,73 +3,92 @@
 #include <iostream>
 #include <utility>
 
-Interpreter::Interpreter(std::string expression) noexcept : expression(std::move(expression)) {}
+Interpreter::Interpreter(std::string expression) : expression(std::move(expression)) {
+    currentChar = this->expression[pos];
+}
 
-[[noreturn]] void Interpreter::throwError() const {
-    throw std::runtime_error("Interpreter error at "+std::to_string(pos)+": "+expression);
+[[noreturn]] void Interpreter::throwError(const std::string &msg) const {
+    throw std::runtime_error("Interpreter error at " + std::to_string(pos) + " with \"" +
+                             expression + "\": " + msg);
 }
 
 Token Interpreter::getNextToken() {
-    if (pos >= expression.size()) {
-        return Token{TokenType::Eof, ""};
-    }
-
-    char currentChar = expression[pos];
-
-    while (isspace(currentChar)) {
-        pos++;
-        currentChar = expression[pos];
-    }
-
-    if (isdigit(currentChar)) {
-        int sum=0;
-        while (isdigit(currentChar)) {
-            sum = sum * 10 + currentChar - '0';
-            currentChar = expression[++pos];
+    while(currentChar != '\0') {
+        if(isspace(currentChar)) {
+            skipWhitespace();
+            continue;
         }
-        return {TokenType::Integer, sum};
+        if(isdigit(currentChar)) {
+            return Token{TokenType::Integer, parseInt()};
+        }
+        if(currentChar == '+') {
+            advance();
+            return Token{TokenType::Plus, nullptr};
+        }
+        if(currentChar == '-') {
+            advance();
+            return Token{TokenType::Minus, nullptr};
+        }
+        throwError("Unexpected character '" + std::string{1, currentChar} + "'");
     }
-    if (currentChar == '+') {
-        pos++;
-        return {TokenType::Plus, nullptr};
-    }
-    if (currentChar == '-') {
-        pos++;
-        return {TokenType::Minus, nullptr};
-    }
-    throwError();
+    return Token{TokenType::Eof, nullptr};
 }
 
 void Interpreter::consume(const TokenType &type) {
-    if (currentToken.getType() == type) {
+    if(currentToken.getType() == type) {
         currentToken = getNextToken();
     } else {
-        throwError();
+        throwError("Unexpected token type " + Token::typeNames.at(currentToken.getType()) +
+                   ", expecting " + Token::typeNames.at(type));
     }
+}
+
+void Interpreter::advance() {
+    pos++;
+    if(pos >= expression.length()) {
+        currentChar = '\0';
+    } else {
+        currentChar = expression[pos];
+    }
+}
+
+void Interpreter::skipWhitespace() {
+    while(isspace(currentChar)) {
+        advance();
+    }
+}
+
+int Interpreter::parseInt() {
+    int sum = 0;
+    while(isdigit(currentChar)) {
+        sum = sum * 10 + currentChar - '0';
+        advance();
+    }
+    return sum;
 }
 
 void Interpreter::process() {
     currentToken = getNextToken();
-    auto left = currentToken;
+    Token left = currentToken;
     consume(TokenType::Integer);
 
-    auto op = currentToken;
-    if (op.getType() == TokenType::Plus) {
+    Token op = currentToken;
+    if(op.getType() == TokenType::Plus) {
         consume(TokenType::Plus);
-    } else if (op.getType() == TokenType::Minus) {
+    } else /*if(op.getType() == TokenType::Minus)*/ {
         consume(TokenType::Minus);
     }
 
-    auto right = currentToken;
+    Token right = currentToken;
     consume(TokenType::Integer);
 
     int result;
-    if (op.getType() == TokenType::Plus) {
+    if(op.getType() == TokenType::Plus) {
         result = left.getValue<int>() + right.getValue<int>();
-    } else if (op.getType() == TokenType::Minus) {
+    } else if(op.getType() == TokenType::Minus) {
         result = left.getValue<int>() - right.getValue<int>();
     } else {
-        throwError();
+        throwError("Unexpected operator type " + Token::typeNames.at(op.getType()));
     }
 
     std::cout << result << std::endl;
