@@ -14,6 +14,7 @@ class Interpreter {
     Token getNextToken();
     void consume(const TokenType &type);
     void advance();
+    int term();
     void skipWhitespace();
     int parseInt();
 

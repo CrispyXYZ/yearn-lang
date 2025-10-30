@@ -1,6 +1,7 @@
 #include "interpreter.h"
 
 #include <iostream>
+#include <sstream>
 #include <utility>
 
 Interpreter::Interpreter(std::string expression) : expression(std::move(expression)) {
@@ -29,7 +30,9 @@ Token Interpreter::getNextToken() {
             advance();
             return Token{TokenType::Minus, nullptr};
         }
-        throwError("Unexpected character '" + std::string{1, currentChar} + "'");
+        std::stringstream ss;
+        ss << "Unexpected character '" << currentChar << "'";
+        throwError(ss.str());
     }
     return Token{TokenType::Eof, nullptr};
 }
@@ -52,6 +55,12 @@ void Interpreter::advance() {
     }
 }
 
+int Interpreter::term() {
+    Token const curr = currentToken;
+    consume(TokenType::Integer);
+    return curr.getValue<int>();
+}
+
 void Interpreter::skipWhitespace() {
     while(isspace(currentChar)) {
         advance();
@@ -69,26 +78,20 @@ int Interpreter::parseInt() {
 
 void Interpreter::process() {
     currentToken = getNextToken();
-    Token left = currentToken;
-    consume(TokenType::Integer);
-
-    Token op = currentToken;
-    if(op.getType() == TokenType::Plus) {
-        consume(TokenType::Plus);
-    } else /*if(op.getType() == TokenType::Minus)*/ {
-        consume(TokenType::Minus);
-    }
-
-    Token right = currentToken;
-    consume(TokenType::Integer);
-
-    int result;
-    if(op.getType() == TokenType::Plus) {
-        result = left.getValue<int>() + right.getValue<int>();
-    } else if(op.getType() == TokenType::Minus) {
-        result = left.getValue<int>() - right.getValue<int>();
-    } else {
-        throwError("Unexpected operator type " + Token::typeNames.at(op.getType()));
+    int result = term();
+    while(currentToken.getType()!=TokenType::Eof) {
+        switch(currentToken.getType()) {
+            case TokenType::Plus:
+                consume(TokenType::Plus);
+                result += term();
+                break;
+            case TokenType::Minus:
+                consume(TokenType::Minus);
+                result -= term();
+                break;
+            default:
+                throwError("Unrecognized token type: " + Token::typeNames.at(currentToken.getType()));
+        }
     }
 
     std::cout << result << std::endl;
