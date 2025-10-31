@@ -47,7 +47,7 @@ int Interpreter::term() {
 
 void Interpreter::expr() {
     currentToken = lexer.getNextToken();
-    int result = factor();
+    int result = term();
     while(is_in(currentToken.getType(), TokenType::Plus, TokenType::Minus)) {
         switch(currentToken.getType()) {
             case TokenType::Plus:
