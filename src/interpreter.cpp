@@ -41,8 +41,8 @@ int Interpreter::term() {
                     "Unexpected token type: ", Token::typeNames.at(currentToken.getType()),
                     ", expecting Multiply or Divide");
         }
-        return result;
     }
+    return result;
 }
 
 void Interpreter::expr() {
