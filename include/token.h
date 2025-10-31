@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <variant>
 
-enum class TokenType : unsigned char { Null, Plus, Minus, Integer, Eof };
+enum class TokenType : unsigned char { Null, Plus, Minus, Multiply, Divide, Integer, Eof };
 
 class Token {
 public:

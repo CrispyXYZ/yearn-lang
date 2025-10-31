@@ -51,6 +51,14 @@ Token Lexer::getNextToken() {
             advance();
             return Token{TokenType::Minus, nullptr};
         }
+        if(currentChar == '*') {
+            advance();
+            return Token{TokenType::Multiply, nullptr};
+        }
+        if(currentChar == '/') {
+            advance();
+            return Token{TokenType::Divide, nullptr};
+        }
         throw InterpreterError("Unexpected character '", currentChar, "'");
     }
     return Token{TokenType::Eof, nullptr};

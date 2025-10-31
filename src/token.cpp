@@ -3,10 +3,9 @@
 #include <utility>
 
 const std::unordered_map<TokenType, std::string> Token::typeNames = {
-    {TokenType::Plus, "Plus"},
-    {TokenType::Minus, "Minus"},
-    {TokenType::Integer, "Integer"},
-    {TokenType::Eof, "Eof"}};
+    {TokenType::Plus, "Plus"}, {TokenType::Minus, "Minus"},       {TokenType::Integer, "Integer"},
+    {TokenType::Eof, "Eof"},   {TokenType::Multiply, "Multiply"}, {TokenType::Divide, "Divide"},
+};
 
 const TokenType &Token::getType() const noexcept {
     return type;

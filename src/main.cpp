@@ -3,6 +3,7 @@
 #include <string>
 
 #include "interpreter.h"
+#include "interpreter_error.h"
 
 int main() {
     for(;;) {
@@ -12,8 +13,8 @@ int main() {
         if(str.empty()) break;
         Interpreter interpreter{Lexer{str}};
         try {
-            interpreter.process();
-        } catch(const std::runtime_error &e) {
+            interpreter.expr();
+        } catch(const InterpreterError &e) {
             std::cout << "Error:" << e.what() << std::endl;
         }
     }

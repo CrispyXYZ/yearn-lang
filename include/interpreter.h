@@ -9,12 +9,13 @@ class Interpreter {
     Token currentToken{};
 
     void consume(const TokenType &type);
-    int term();
 
 public:
     explicit Interpreter(Lexer lexer);
     Interpreter() = delete;
-    void process();
+    int factor();
+    int term();
+    void expr();
 };
 
 #endif  // YEARN_INTERPRETER_H

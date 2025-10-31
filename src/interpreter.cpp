@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "interpreter_error.h"
+#include "utils.h"
 
 Interpreter::Interpreter(Lexer lexer) : lexer(std::move(lexer)) {}
 
@@ -17,16 +18,37 @@ void Interpreter::consume(const TokenType &type) {
     }
 }
 
-int Interpreter::term() {
+int Interpreter::factor() {
     Token const curr = currentToken;
     consume(TokenType::Integer);
     return curr.getValue<int>();
 }
 
-void Interpreter::process() {
+int Interpreter::term() {
+    int result = factor();
+    while(is_in(currentToken.getType(), TokenType::Multiply, TokenType::Divide)) {
+        switch(currentToken.getType()) {
+            case TokenType::Multiply:
+                consume(TokenType::Multiply);
+                result *= factor();
+                break;
+            case TokenType::Divide:
+                consume(TokenType::Divide);
+                result /= factor();
+                break;
+            default:
+                throw InterpreterError(
+                    "Unexpected token type: ", Token::typeNames.at(currentToken.getType()),
+                    ", expecting Multiply or Divide");
+        }
+        return result;
+    }
+}
+
+void Interpreter::expr() {
     currentToken = lexer.getNextToken();
-    int result = term();
-    while(currentToken.getType() != TokenType::Eof) {
+    int result = factor();
+    while(is_in(currentToken.getType(), TokenType::Plus, TokenType::Minus)) {
         switch(currentToken.getType()) {
             case TokenType::Plus:
                 consume(TokenType::Plus);
@@ -37,8 +59,9 @@ void Interpreter::process() {
                 result -= term();
                 break;
             default:
-                throw InterpreterError("Unrecognized token type: ",
-                                       Token::typeNames.at(currentToken.getType()));
+                throw InterpreterError(
+                    "Unexpected token type: ", Token::typeNames.at(currentToken.getType()),
+                    ", expecting Plus or Minus");
         }
     }
 

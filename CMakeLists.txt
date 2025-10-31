@@ -12,4 +12,5 @@ add_executable(yearn
         src/token.cpp
         src/interpreter.cpp
         src/lexer.cpp
+        src/utils.cpp
 )
