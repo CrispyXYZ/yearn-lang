@@ -59,6 +59,14 @@ Token Lexer::getNextToken() {
             advance();
             return Token{TokenType::Divide, nullptr};
         }
+        if(currentChar == '(') {
+            advance();
+            return Token{TokenType::LeftParen, nullptr};
+        }
+        if(currentChar == ')') {
+            advance();
+            return Token{TokenType::RightParen, nullptr};
+        }
         throw InterpreterError("Unexpected character '", currentChar, "'");
     }
     return Token{TokenType::Eof, nullptr};

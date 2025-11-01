@@ -2,10 +2,21 @@
 #define YEARN_TOKEN_H
 #include <ostream>
 #include <string>
-#include <unordered_map>
 #include <variant>
 
-enum class TokenType : unsigned char { Null, Plus, Minus, Multiply, Divide, Integer, Eof };
+enum class TokenType : unsigned char {
+    Null,
+    Plus,
+    Minus,
+    Multiply,
+    Divide,
+    Integer,
+    LeftParen,
+    RightParen,
+    Eof,
+};
+
+std::ostream &operator<<(std::ostream &strm, const TokenType &tok);
 
 class Token {
 public:
@@ -16,8 +27,6 @@ private:
     ValueType value = nullptr;
 
 public:
-    static const std::unordered_map<TokenType, std::string> typeNames;
-
     template <typename T>
     Token(const TokenType type, T &&value) noexcept : type(type), value(std::forward<T>(value)) {}
 

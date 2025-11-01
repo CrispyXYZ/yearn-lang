@@ -13,7 +13,7 @@ int main() {
         if(str.empty()) break;
         Interpreter interpreter{Lexer{str}};
         try {
-            interpreter.expr();
+            std::cout << interpreter.expr() << std::endl;
         } catch(const InterpreterError &e) {
             std::cout << "Error:" << e.what() << std::endl;
         }

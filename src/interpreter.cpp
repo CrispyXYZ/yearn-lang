@@ -1,27 +1,36 @@
 #include "interpreter.h"
 
-#include <iostream>
 #include <utility>
 
 #include "interpreter_error.h"
 #include "utils.h"
 
-Interpreter::Interpreter(Lexer lexer) : lexer(std::move(lexer)) {}
+Interpreter::Interpreter(Lexer lexer) :
+    lexer(std::move(lexer)), currentToken(this->lexer.getNextToken()) {}
 
 void Interpreter::consume(const TokenType &type) {
     if(currentToken.getType() == type) {
         currentToken = lexer.getNextToken();
     } else {
-        throw InterpreterError("Unexpected token type ",
-                               Token::typeNames.at(currentToken.getType()), ", expecting ",
-                               Token::typeNames.at(type));
+        throw InterpreterError("Unexpected token type ", currentToken.getType(), ", expecting ",
+                               type);
     }
 }
 
 int Interpreter::factor() {
     Token const curr = currentToken;
-    consume(TokenType::Integer);
-    return curr.getValue<int>();
+    if(curr.getType() == TokenType::Integer) {
+        consume(TokenType::Integer);
+        return curr.getValue<int>();
+    }
+    if(curr.getType() == TokenType::LeftParen) {
+        consume(TokenType::LeftParen);
+        int result = expr();
+        consume(TokenType::RightParen);
+        return result;
+    }
+    throw InterpreterError("Unexpected token type ", curr.getType(),
+                           ", expecting Integer or LeftParen");
 }
 
 int Interpreter::term() {
@@ -37,16 +46,14 @@ int Interpreter::term() {
                 result /= factor();
                 break;
             default:
-                throw InterpreterError(
-                    "Unexpected token type: ", Token::typeNames.at(currentToken.getType()),
-                    ", expecting Multiply or Divide");
+                throw InterpreterError("Unexpected token type: ", currentToken.getType(),
+                                       ", expecting Multiply or Divide");
         }
     }
     return result;
 }
 
-void Interpreter::expr() {
-    currentToken = lexer.getNextToken();
+int Interpreter::expr() {
     int result = term();
     while(is_in(currentToken.getType(), TokenType::Plus, TokenType::Minus)) {
         switch(currentToken.getType()) {
@@ -59,11 +66,10 @@ void Interpreter::expr() {
                 result -= term();
                 break;
             default:
-                throw InterpreterError(
-                    "Unexpected token type: ", Token::typeNames.at(currentToken.getType()),
-                    ", expecting Plus or Minus");
+                throw InterpreterError("Unexpected token type: ", currentToken.getType(),
+                                       ", expecting Plus or Minus");
         }
     }
 
-    std::cout << result << std::endl;
+    return result;
 }

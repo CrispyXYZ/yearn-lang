@@ -6,7 +6,7 @@
 
 class Interpreter {
     Lexer lexer;
-    Token currentToken{};
+    Token currentToken;
 
     void consume(const TokenType &type);
 
@@ -15,7 +15,7 @@ public:
     Interpreter() = delete;
     int factor();
     int term();
-    void expr();
+    int expr();
 };
 
 #endif  // YEARN_INTERPRETER_H
