@@ -11,9 +11,9 @@ int main() {
         std::cout << ">>> ";
         getline(std::cin, str);
         if(str.empty()) break;
-        Interpreter interpreter{Lexer{str}};
+        Interpreter interpreter{Parser{Lexer{str}}};
         try {
-            std::cout << interpreter.expr() << std::endl;
+            std::cout << interpreter.interpret() << std::endl;
         } catch(const InterpreterError &e) {
             std::cout << "Error:" << e.what() << std::endl;
         }

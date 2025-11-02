@@ -13,4 +13,6 @@ add_executable(yearn
         src/interpreter.cpp
         src/lexer.cpp
         src/utils.cpp
+        src/ast.cpp
+        src/parser.cpp
 )

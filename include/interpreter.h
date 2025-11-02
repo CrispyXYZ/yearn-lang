@@ -1,21 +1,19 @@
 #ifndef YEARN_INTERPRETER_H
 #define YEARN_INTERPRETER_H
 
-#include "lexer.h"
-#include "token.h"
+#include "ast.h"
+#include "parser.h"
 
-class Interpreter {
-    Lexer lexer;
-    Token currentToken;
-
-    void consume(const TokenType &type);
+class Interpreter final : public ASTVisitor {
+    Parser parser;
 
 public:
-    explicit Interpreter(Lexer lexer);
+    explicit Interpreter(Parser parser);
     Interpreter() = delete;
-    int factor();
-    int term();
-    int expr();
+    [[nodiscard]] int visit(ASTNode const &node) const override;
+    [[nodiscard]] int visitNumber(Num const &node) const override;
+    [[nodiscard]] int visitBinary(BinOp const &node) const override;
+    int interpret();
 };
 
 #endif  // YEARN_INTERPRETER_H
