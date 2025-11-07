@@ -7,7 +7,7 @@ class Parser {
     Lexer lexer;
     Token currentToken;
 
-    void consume(const TokenType &type);
+    void consume(TokenType const &type);
 
 public:
     explicit Parser(Lexer lexer);

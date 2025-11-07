@@ -4,6 +4,12 @@
 
 #include "interpreter.h"
 
+UnaryOp::UnaryOp(Token op, NodePtr expr) : op(std::move(op)), expr(std::move(expr)) {}
+
+int UnaryOp::accept(ASTVisitor const &visitor) const {
+    return visitor.visitUnary(*this);
+}
+
 BinOp::BinOp(Token op, NodePtr left, NodePtr right) :
     op(std::move(op)), left(std::move(left)), right(std::move(right)) {}
 

@@ -6,6 +6,7 @@ UseTab: Never
 
 BreakBeforeBraces: Attach
 
+QualifierAlignment: Right
 PointerAlignment: Right
 DerivePointerAlignment: false
 

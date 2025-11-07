@@ -29,6 +29,17 @@ int Interpreter::visitBinary(BinOp const &node) const {
     }
 }
 
+int Interpreter::visitUnary(UnaryOp const &node) const {
+    switch(node.op.getType()) {
+        case TokenType::Plus:
+            return visit(*node.expr);
+        case TokenType::Minus:
+            return -visit(*node.expr);
+        default:
+            throw InterpreterError("Unsupported node type ", node.op.getType());
+    }
+}
+
 int Interpreter::interpret() {
     return visit(*parser.parse());
 }

@@ -13,6 +13,7 @@ public:
     [[nodiscard]] int visit(ASTNode const &node) const override;
     [[nodiscard]] int visitNumber(Num const &node) const override;
     [[nodiscard]] int visitBinary(BinOp const &node) const override;
+    [[nodiscard]] int visitUnary(UnaryOp const &node) const override;
     int interpret();
 };
 

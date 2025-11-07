@@ -14,7 +14,7 @@ int main() {
         Interpreter interpreter{Parser{Lexer{str}}};
         try {
             std::cout << interpreter.interpret() << std::endl;
-        } catch(const InterpreterError &e) {
+        } catch(InterpreterError const &e) {
             std::cout << "Error:" << e.what() << std::endl;
         }
     }

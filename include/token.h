@@ -16,7 +16,7 @@ enum class TokenType : unsigned char {
     Eof,
 };
 
-std::ostream &operator<<(std::ostream &strm, const TokenType &tok);
+std::ostream &operator<<(std::ostream &strm, TokenType const &tok);
 
 class Token {
 public:
@@ -28,18 +28,18 @@ private:
 
 public:
     template <typename T>
-    Token(const TokenType type, T &&value) noexcept : type(type), value(std::forward<T>(value)) {}
+    Token(TokenType const type, T &&value) noexcept : type(type), value(std::forward<T>(value)) {}
 
     Token() = default;
 
-    [[nodiscard]] const TokenType &getType() const noexcept;
+    [[nodiscard]] TokenType const &getType() const noexcept;
 
     template <typename T>
-    const T &getValue() const noexcept {
+    T const &getValue() const noexcept {
         return std::get<T>(value);
     }
 
-    friend std::ostream &operator<<(std::ostream &strm, const Token &tok);
+    friend std::ostream &operator<<(std::ostream &strm, Token const &tok);
 };
 
 #endif  // YEARN_TOKEN_H

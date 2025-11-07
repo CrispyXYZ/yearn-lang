@@ -1,6 +1,6 @@
 #include "token.h"
 
-std::ostream &operator<<(std::ostream &strm, const TokenType &tok) {
+std::ostream &operator<<(std::ostream &strm, TokenType const &tok) {
     switch(tok) {
         case TokenType::Null:
             strm << "Null";
@@ -33,12 +33,12 @@ std::ostream &operator<<(std::ostream &strm, const TokenType &tok) {
     return strm;
 }
 
-const TokenType &Token::getType() const noexcept {
+TokenType const &Token::getType() const noexcept {
     return type;
 }
 
-std::ostream &operator<<(std::ostream &strm, const Token &tok) {
+std::ostream &operator<<(std::ostream &strm, Token const &tok) {
     strm << "Token{type=" << tok.type << ", value=";
-    std::visit([&strm](const auto &v) { strm << v << "}"; }, tok.value);
+    std::visit([&strm](auto const &v) { strm << v << "}"; }, tok.value);
     return strm;
 }

@@ -13,6 +13,14 @@ public:
 
 using NodePtr = std::unique_ptr<ASTNode>;
 
+class UnaryOp final : public ASTNode {
+public:
+    Token op;
+    NodePtr expr;
+    UnaryOp(Token op, NodePtr expr);
+    [[nodiscard]] int accept(ASTVisitor const &visitor) const override;
+};
+
 class BinOp final : public ASTNode {
 public:
     Token op;
@@ -33,9 +41,10 @@ public:
 class ASTVisitor {
 public:
     virtual ~ASTVisitor() = default;
-    [[nodiscard]] virtual int visit(const ASTNode &node) const = 0;
-    [[nodiscard]] virtual int visitNumber(const Num &node) const = 0;
-    [[nodiscard]] virtual int visitBinary(const BinOp &node) const = 0;
+    [[nodiscard]] virtual int visit(ASTNode const &node) const = 0;
+    [[nodiscard]] virtual int visitNumber(Num const &node) const = 0;
+    [[nodiscard]] virtual int visitBinary(BinOp const &node) const = 0;
+    [[nodiscard]] virtual int visitUnary(UnaryOp const &node) const = 0;
 };
 
 #endif  // YEARN_AST_H
