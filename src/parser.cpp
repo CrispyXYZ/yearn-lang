@@ -31,7 +31,10 @@ NodePtr Parser::factor() {
         consume(TokenType::RightParen);
         return node;
     }
-    throw InterpreterError("Unexpected token type ", type, ", expecting Integer or LeftParen");
+    if(type == TokenType::Identifier) {
+        return variable();
+    }
+    throw InterpreterError("Unexpected token type ", type, " while parsing factor");
 }
 
 NodePtr Parser::term() {
@@ -47,7 +50,7 @@ NodePtr Parser::term() {
                 break;
             default:
                 throw InterpreterError("Unexpected token type: ", currentToken.getType(),
-                                       ", expecting Multiply or Divide");
+                                       " while parsing term");
         }
         node = std::make_unique<BinOp>(token, std::move(node), factor());
     }
@@ -67,13 +70,64 @@ NodePtr Parser::expr() {
                 break;
             default:
                 throw InterpreterError("Unexpected token type: ", currentToken.getType(),
-                                       ", expecting Plus or Minus");
+                                       " while parsing expr");
         }
         node = std::make_unique<BinOp>(token, std::move(node), term());
     }
     return node;
 }
 
+NodePtr Parser::variable() {
+    NodePtr node = std::make_unique<Variable>(currentToken);
+    consume(TokenType::Identifier);
+    return node;
+}
+
+NodePtr Parser::assignment() {
+    NodePtr left = variable();
+    Token const token = currentToken;
+    consume(TokenType::Assign);
+    NodePtr right = expr();
+    return std::make_unique<Assignment>(token, std::move(left), std::move(right));
+}
+
+NodePtr Parser::statement() {
+    NodePtr node;
+    if(currentToken.getType() == TokenType::LeftBrace) {
+        node = compound_statement();
+    } else if(currentToken.getType() == TokenType::Identifier) {
+        node = assignment();
+    } else {
+        throw InterpreterError("Unexpected token type ", currentToken.getType(), " while parsing statement");
+    }
+    return node;
+}
+
+std::vector<NodePtr> Parser::statement_list() {
+    std::vector<NodePtr> nodes;
+    if(currentToken.getType() == TokenType::RightBrace) {
+        return nodes;
+    }
+
+    nodes.push_back(statement());
+    while(currentToken.getType() == TokenType::Semicolon) {
+        consume(TokenType::Semicolon);
+        if (currentToken.getType() == TokenType::RightBrace || currentToken.getType() == TokenType::Eof) {
+            break;
+        }
+        nodes.push_back(statement());
+    }
+
+    return nodes;
+}
+
+NodePtr Parser::compound_statement() {
+    consume(TokenType::LeftBrace);
+    std::vector<NodePtr> nodes = statement_list();
+    consume(TokenType::RightBrace);
+    return std::make_unique<Compound>(std::move(nodes));
+}
+
 NodePtr Parser::parse() {
-    return expr();
+    return std::make_unique<Compound>(std::move(statement_list()));;
 }

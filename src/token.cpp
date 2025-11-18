@@ -17,6 +17,9 @@ std::ostream &operator<<(std::ostream &strm, TokenType const &tok) {
         case TokenType::Divide:
             strm << "Divide";
             break;
+        case TokenType::Assign:
+            strm << "Assign";
+            break;
         case TokenType::Integer:
             strm << "Integer";
             break;
@@ -25,6 +28,18 @@ std::ostream &operator<<(std::ostream &strm, TokenType const &tok) {
             break;
         case TokenType::RightParen:
             strm << "RightParen";
+            break;
+        case TokenType::LeftBrace:
+            strm << "LeftBrace";
+            break;
+        case TokenType::RightBrace:
+            strm << "RightBrace";
+            break;
+        case TokenType::Semicolon:
+            strm << "Semicolon";
+            break;
+        case TokenType::Identifier:
+            strm << "Identifier";
             break;
         case TokenType::Eof:
             strm << "Eof";

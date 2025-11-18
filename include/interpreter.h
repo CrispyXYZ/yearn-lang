@@ -5,16 +5,19 @@
 #include "parser.h"
 
 class Interpreter final : public ASTVisitor {
-    Parser parser;
-
 public:
-    explicit Interpreter(Parser parser);
-    Interpreter() = delete;
-    [[nodiscard]] int visit(ASTNode const &node) const override;
-    [[nodiscard]] int visitNumber(Num const &node) const override;
-    [[nodiscard]] int visitBinary(BinOp const &node) const override;
-    [[nodiscard]] int visitUnary(UnaryOp const &node) const override;
-    int interpret();
+    Interpreter();
+    [[nodiscard]] int visit(ASTNode &node) override;
+    [[nodiscard]] int visitNumber(Num &node) override;
+    [[nodiscard]] int visitBinary(BinOp &node) override;
+    [[nodiscard]] int visitUnary(UnaryOp &node) override;
+    [[nodiscard]] int visitCompound(Compound &node) override;
+    [[nodiscard]] int visitAssignment(Assignment &node) override;
+    [[nodiscard]] int visitVariable(Variable &node) override;
+    int eval(std::string &code);
+    void reset();
+    std::unordered_map<std::string, int> getSymbols() const;
+
 };
 
 #endif  // YEARN_INTERPRETER_H

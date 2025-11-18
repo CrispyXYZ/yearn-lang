@@ -10,9 +10,14 @@ enum class TokenType : unsigned char {
     Minus,
     Multiply,
     Divide,
+    Assign,
     Integer,
     LeftParen,
     RightParen,
+    LeftBrace,
+    RightBrace,
+    Semicolon,
+    Identifier,
     Eof,
 };
 

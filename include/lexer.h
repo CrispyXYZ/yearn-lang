@@ -13,11 +13,13 @@ class Lexer {
     void advance();
     void skipWhitespace();
     int parseInt();
+    [[nodiscard]] char peek() const;
 
 public:
     explicit Lexer(std::string expression);
     Lexer() = delete;
     Token getNextToken();
+    Token getIdToken();
 };
 
 #endif  // YEARN_LEXER_H

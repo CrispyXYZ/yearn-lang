@@ -14,6 +14,11 @@ public:
     NodePtr factor();
     NodePtr term();
     NodePtr expr();
+    NodePtr variable();
+    NodePtr assignment();
+    NodePtr statement();
+    std::vector<NodePtr> statement_list();
+    NodePtr compound_statement();
     NodePtr parse();
 };
 

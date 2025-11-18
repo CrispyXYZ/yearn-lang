@@ -34,6 +34,14 @@ int Lexer::parseInt() {
     return sum;
 }
 
+char Lexer::peek() const {
+    int const p = pos + 1;
+    if(p >= expression.length()) {
+        return '\0';
+    }
+    return expression[p];
+}
+
 Token Lexer::getNextToken() {
     while(currentChar != '\0') {
         if(isspace(currentChar)) {
@@ -42,6 +50,17 @@ Token Lexer::getNextToken() {
         }
         if(isdigit(currentChar)) {
             return Token{TokenType::Integer, parseInt()};
+        }
+        if(isalpha(currentChar)) {
+            return getIdToken();
+        }
+        if(currentChar == ';') {
+            advance();
+            return Token{TokenType::Semicolon, nullptr};
+        }
+        if(currentChar == '=') {
+            advance();
+            return Token{TokenType::Assign, nullptr};
         }
         if(currentChar == '+') {
             advance();
@@ -67,7 +86,24 @@ Token Lexer::getNextToken() {
             advance();
             return Token{TokenType::RightParen, nullptr};
         }
-        throw InterpreterError("Unexpected character '", currentChar, "'");
+        if(currentChar == '{') {
+            advance();
+            return Token{TokenType::LeftBrace, nullptr};
+        }
+        if(currentChar == '}') {
+            advance();
+            return Token{TokenType::RightBrace, nullptr};
+        }
+        throw InterpreterError("Unexpected character '", currentChar, "' while lexing");
     }
     return Token{TokenType::Eof, nullptr};
+}
+
+Token Lexer::getIdToken() {
+    std::stringstream ss;
+    while(currentChar != '\0' && isalnum(currentChar)) {
+        ss << currentChar;
+        advance();
+    }
+    return Token{TokenType::Identifier, ss.str()};
 }
